@@ -119,12 +119,5 @@ extern (C) long fileSize(void* file)
     return size;
 }
 
-extern (C) size_t readFile(void* file, void* buffer, size_t size)
-{
-    return fread(buffer, 1, size, file);
-}
-
-extern (C) size_t writeFile(void* file, const void* buffer, size_t size)
-{
-    return fwrite(buffer, 1, size, file);
-}
+extern (C) size_t readFile(void* file, void* buffer, size_t size) => fread(buffer, 1, size, file);
+extern (C) size_t writeFile(void* file, const void* buffer, size_t size) => fwrite(buffer, 1, size, file);
