@@ -11,6 +11,8 @@ extern (C) size_t fread(void* ptr, size_t size, size_t count, void* stream);
 extern (C) size_t fwrite(const void* ptr, size_t size, size_t count, void* stream);
 extern (C) int fseek(void* stream, long offset, int origin);
 extern (C) long ftell(void* stream);
+extern (C) int vprintf(const char* fmt, void* arg);
+extern (C) int fprintf(void* stream, const char* fmt, ...);
 
 extern (C) void print(const char* str)
 {
@@ -69,7 +71,13 @@ extern (C) void readString(char* buffer)
 
 extern (C) void printfmt(const char* fmt, ...)
 {
-    printf(fmt);
+    import core.vararg;
+
+    va_list args;
+    va_start(args, fmt);
+    vprintf(fmt, args); 
+    va_end(args);
+    
     auto _ = fflush(stdout);
 }
 
