@@ -79,10 +79,10 @@ extern (C) void printfmt(const char* fmt, ...)
 
     va_list args;
     va_start(args, fmt);
-    vprintf(fmt, args);
+    auto _ = vprintf(fmt, args);
     va_end(args);
 
-    auto _ = fflush(stdout);
+    _ = fflush(stdout);
 }
 
 extern (C) void printInt(int val)
@@ -128,4 +128,5 @@ extern (C) long fileSize(void* file)
 
 extern (C) size_t readFile(void* file, void* buffer, size_t size) => fread(buffer, 1, size, file);
 extern (C) size_t writeFile(void* file, const void* buffer, size_t size) => fwrite(
-    buffer, 1, size, file);
+    buffer, 1, size, file
+);
