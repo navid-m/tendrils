@@ -3,7 +3,7 @@
 		"Navid"
 	],
 	"copyright": "Copyright © 2025, Navid",
-	"description": "A minimal D application.",
+	"description": "Minimal stdio for producing lightweight binaries (by not importing std.stdio)",
 	"license": "proprietary",
 	"name": "tendrils"
 }
