@@ -1,4 +1,4 @@
-module minstdio;
+module tendrils.minstdio;
 
 extern (C) void printf(const char*, ...);
 extern (C) int scanf(const char*, ...);
