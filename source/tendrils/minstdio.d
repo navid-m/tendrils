@@ -26,7 +26,7 @@ extern (C) void println(const char* str)
 
 extern (C) bool tryReadInt(ref int val) => scanf("%d", &val) == 1;
 extern (C) bool tryReadFloat(ref float val) => scanf("%f", &val) == 1;
-extern (C) bool tryReadString(char* buffer, int maxLen) => scanf("%s", buffer) == 1;
+extern (C) bool tryReadString(char* buffer) => scanf("%s", buffer) == 1;
 
 extern (C) int readIntWithDefault(int defaultValue)
 {
