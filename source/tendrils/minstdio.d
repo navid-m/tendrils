@@ -13,6 +13,7 @@ extern (C) int fseek(void* stream, long offset, int origin);
 extern (C) long ftell(void* stream);
 extern (C) int vprintf(const char* fmt, void* arg);
 extern (C) int fprintf(void* stream, const char* fmt, ...);
+extern (C) void flushAll() { auto _ = fflush(null); }
 
 extern (C) void print(const char* str)
 {
@@ -77,7 +78,7 @@ extern (C) void printfmt(const char* fmt, ...)
     va_start(args, fmt);
     vprintf(fmt, args); 
     va_end(args);
-    
+
     auto _ = fflush(stdout);
 }
 
