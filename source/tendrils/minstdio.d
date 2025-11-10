@@ -5,6 +5,12 @@ extern (C) int scanf(const char*, ...);
 extern (C) int fflush(void*);
 extern (C) __gshared void* stdout;
 extern (C) __gshared void* stdin;
+extern (C) __gshared void* fopen(const char* filename, const char* mode);
+extern (C) int fclose(void* stream);
+extern (C) size_t fread(void* ptr, size_t size, size_t count, void* stream);
+extern (C) size_t fwrite(const void* ptr, size_t size, size_t count, void* stream);
+extern (C) int fseek(void* stream, long offset, int origin);
+extern (C) long ftell(void* stream);
 
 extern (C) void print(const char* str)
 {
@@ -59,4 +65,66 @@ extern (C) void readString(char* buffer, int maxLen)
         assert(0, "Failed to read string");
     }
     auto _ = fflush(stdin);
+}
+
+extern (C) void printfmt(const char* fmt, ...)
+{
+    printf(fmt);
+    auto _ = fflush(stdout);
+}
+
+extern (C) void printInt(int val)
+{
+    printf("%d", val);
+    auto _ = fflush(stdout);
+}
+
+extern (C) void printFloat(float val)
+{
+    printf("%f", val);
+    auto _ = fflush(stdout);
+}
+
+extern (C) bool tryReadLine(char* buffer, int maxLen)
+{
+    return scanf("%[^\n]", buffer) == 1;
+}
+
+extern (C) void readLine(char* buffer, int maxLen)
+{
+    if (!tryReadLine(buffer, maxLen))
+    {
+        assert(0, "Failed to read line");
+    }
+    auto _ = fflush(stdin);
+}
+
+extern (C) bool fileExists(const char* filename)
+{
+    auto file = fopen(filename, "r");
+    if (file)
+    {
+        auto _ = fclose(file);
+        return true;
+    }
+    return false;
+}
+
+extern (C) long fileSize(void* file)
+{
+    auto pos = ftell(file);
+    auto _ = fseek(file, 0, 2);
+    auto size = ftell(file);
+    _ = fseek(file, pos, 0);
+    return size;
+}
+
+extern (C) size_t readFile(void* file, void* buffer, size_t size)
+{
+    return fread(buffer, 1, size, file);
+}
+
+extern (C) size_t writeFile(void* file, const void* buffer, size_t size)
+{
+    return fwrite(buffer, 1, size, file);
 }
