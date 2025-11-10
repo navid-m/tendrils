@@ -14,4 +14,7 @@ unittest
 	printInt(42);
 	printFloat(3.14);
 	println("");
+	
+	auto fl = readFloat();
+	printFloat(fl);
 }
