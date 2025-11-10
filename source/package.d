@@ -4,5 +4,5 @@ public import tendrils.minstdio;
 
 unittest
 {
-	print("Hello, world");
+	println("Hello, world");
 }
