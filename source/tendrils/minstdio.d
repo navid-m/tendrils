@@ -58,9 +58,9 @@ extern (C) float readFloat()
     return val;
 }
 
-extern (C) void readString(char* buffer, int maxLen)
+extern (C) void readString(char* buffer)
 {
-    if (!tryReadString(buffer, maxLen))
+    if (!tryReadString(buffer))
     {
         assert(0, "Failed to read string");
     }
