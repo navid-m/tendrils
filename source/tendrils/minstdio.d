@@ -18,22 +18,45 @@ extern (C) void println(const char* str)
     auto _ = fflush(stdout);
 }
 
+extern (C) bool tryReadInt(ref int val) => scanf("%d", &val) == 1;
+extern (C) bool tryReadFloat(ref float val) => scanf("%f", &val) == 1;
+extern (C) bool tryReadString(char* buffer, int maxLen) => scanf("%s", buffer) == 1;
+
+extern (C) int readIntWithDefault(int defaultValue)
+{
+    int val;
+    return tryReadInt(val) ? val : defaultValue;
+}
+
+extern (C) float readFloatWithDefault(float defaultValue)
+{
+    float val;
+    return tryReadFloat(val) ? val : defaultValue;
+}
+
 extern (C) int readInt()
 {
     int val;
-    auto _ = scanf("%d", &val);
+    if (!tryReadInt(val))
+        assert(0, "Failed to read int");
     return val;
 }
 
 extern (C) float readFloat()
 {
     float val;
-    auto _ = scanf("%f", &val);
+    if (!tryReadFloat(val))
+    {
+        assert(0, "Failed to read float");
+    }
     return val;
 }
 
 extern (C) void readString(char* buffer, int maxLen)
 {
-    auto _ = scanf("%s", buffer);
-    _ = fflush(stdin);
+    if (!tryReadString(buffer, maxLen))
+    {
+        assert(0, "Failed to read string");
+    }
+    auto _ = fflush(stdin);
 }
