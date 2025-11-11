@@ -211,7 +211,8 @@ extern (C) bool tryReadLine(char* buffer, int maxLen)
     if (fgets(buffer, maxLen, stdin) !is null)
     {
         int len = 0;
-        while (buffer[len] != '\0') len++;
+        while (buffer[len] != '\0')
+            len++;
         if (len > 0 && buffer[len - 1] == '\n')
             buffer[len - 1] = '\0';
         return true;
@@ -317,3 +318,30 @@ extern (C) size_t readFile(void* file, void* buffer, size_t size) => fread(buffe
 extern (C) size_t writeFile(void* file, const void* buffer, size_t size) => fwrite(
     buffer, 1, size, file
 );
+
+/** 
+ * Formats a string into a provided buffer without D runtime dependencies.
+ * Supports standard printf format specifiers.
+ *
+ * Params:
+ *   buffer = The buffer to write the formatted string to.
+ *   bufferSize = The size of the buffer.
+ *   fmt = The format string.
+ *   ... = The arguments to format.
+ *
+ * Returns:
+ *   The number of characters written (excluding null terminator), or -1 on error.
+ */
+extern (C) int formatToBuffer(char* buffer, size_t bufferSize, const char* fmt, ...)
+{
+    import core.vararg;
+    import core.stdc.stdio : vsnprintf;
+
+    va_list args;
+    va_start(args, fmt);
+    scope (exit)
+        va_end(args);
+
+    int result = vsnprintf(buffer, bufferSize, fmt, args);
+    return result;
+}
