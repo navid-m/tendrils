@@ -1,28 +1,29 @@
 module tendrils.stdio;
 
+import core.stdc.stdio : stderr, FILE;
+
 extern (C) void printf(const char*, ...);
 extern (C) int scanf(const char*, ...);
-extern (C) int fflush(void*);
-extern (C) __gshared void* stdout;
-extern (C) __gshared void* stdin;
-extern (C) __gshared void* stderr;
-extern (C) __gshared void* fopen(const char* filename, const char* mode);
-extern (C) int fclose(void* stream);
-extern (C) size_t fread(void* ptr, size_t size, size_t count, void* stream);
-extern (C) size_t fwrite(const void* ptr, size_t size, size_t count, void* stream);
-extern (C) int fseek(void* stream, long offset, int origin);
-extern (C) long ftell(void* stream);
+extern (C) int fflush(FILE*);
+extern (C) __gshared FILE* stdout;
+extern (C) __gshared FILE* stdin;
+extern (C) __gshared FILE* fopen(const char* filename, const char* mode);
+extern (C) int fclose(FILE* stream);
+extern (C) size_t fread(void* ptr, size_t size, size_t count, FILE* stream);
+extern (C) size_t fwrite(const void* ptr, size_t size, size_t count, FILE* stream);
+extern (C) int fseek(FILE* stream, long offset, int origin);
+extern (C) long ftell(FILE* stream);
 extern (C) int vprintf(const char* fmt, void* arg);
-extern (C) int fprintf(void* stream, const char* fmt, ...);
-extern (C) int fgetc(void* stream);
-extern (C) int fputc(int c, void* stream);
-extern (C) char* fgets(char* str, int n, void* stream);
-extern (C) int fputs(const char* str, void* stream);
+extern (C) int fprintf(FILE* stream, const char* fmt, ...);
+extern (C) int fgetc(FILE* stream);
+extern (C) int fputc(int c, FILE* stream);
+extern (C) char* fgets(char* str, int n, FILE* stream);
+extern (C) int fputs(const char* str, FILE* stream);
 extern (C) int getchar();
 extern (C) int putchar(int c);
-extern (C) int ferror(void* stream);
-extern (C) int feof(void* stream);
-extern (C) void clearerr(void* stream);
+extern (C) int ferror(FILE* stream);
+extern (C) int feof(FILE* stream);
+extern (C) void clearerr(FILE* stream);
 
 /** 
  * Flushes all streams.
@@ -64,8 +65,11 @@ extern (C) void println(const char* str)
  */
 extern (C) void eprint(const char* str)
 {
-    auto _ = fprintf(stderr, "%s", str);
-    _ = fflush(stderr);
+    if (stderr)
+    {
+        auto _ = fprintf(stderr, "%s", str);
+        _ = fflush(stderr);
+    }
 }
 
 /** 
@@ -76,8 +80,11 @@ extern (C) void eprint(const char* str)
  */
 extern (C) void eprintln(const char* str)
 {
-    auto _ = fprintf(stderr, "%s\n", str);
-    _ = fflush(stderr);
+    if (stderr)
+    {
+        auto _ = fprintf(stderr, "%s\n", str);
+        _ = fflush(stderr);
+    }
 }
 
 /** 
@@ -88,8 +95,11 @@ extern (C) void eprintln(const char* str)
  */
 extern (C) void eprintInt(int val)
 {
-    auto _ = fprintf(stderr, "%d\n", val);
-    _ = fflush(stderr);
+    if (stderr)
+    {
+        auto _ = fprintf(stderr, "%d\n", val);
+        _ = fflush(stderr);
+    }
 }
 
 /** 
@@ -371,7 +381,7 @@ extern (C) void writeChar(int c)
  * Returns:
  *   true if EOF has been reached, false otherwise.
  */
-extern (C) bool isEof(void* file) => feof(file) != 0;
+extern (C) bool isEof(FILE* file) => feof(file) != 0;
 
 /** 
  * Checks if an error has occurred on a stream.
@@ -382,7 +392,7 @@ extern (C) bool isEof(void* file) => feof(file) != 0;
  * Returns:
  *   true if an error has occurred, false otherwise.
  */
-extern (C) bool hasError(void* file) => ferror(file) != 0;
+extern (C) bool hasError(FILE* file) => ferror(file) != 0;
 
 /** 
  * Clears the error and EOF indicators for a stream.
@@ -390,7 +400,7 @@ extern (C) bool hasError(void* file) => ferror(file) != 0;
  * Params:
  *   file = The file stream to clear.
  */
-extern (C) void clearError(void* file)
+extern (C) void clearError(FILE* file)
 {
     clearerr(file);
 }
@@ -424,7 +434,7 @@ extern (C) bool fileExists(const char* filename)
  * Returns:
  *   The size of the file.
  */
-extern (C) long fileSize(void* file)
+extern (C) long fileSize(FILE* file)
 {
     auto pos = ftell(file);
     auto _ = fseek(file, 0, 2);
@@ -444,7 +454,7 @@ extern (C) long fileSize(void* file)
  * Returns:
  *   The number of bytes read.
  */
-extern (C) size_t readFile(void* file, void* buffer, size_t size) => fread(buffer, 1, size, file);
+extern (C) size_t readFile(FILE* file, void* buffer, size_t size) => fread(buffer, 1, size, file);
 
 /** 
  * Writes a file.
@@ -457,7 +467,7 @@ extern (C) size_t readFile(void* file, void* buffer, size_t size) => fread(buffe
  * Returns:
  *   The number of bytes written.
  */
-extern (C) size_t writeFile(void* file, const void* buffer, size_t size) => fwrite(
+extern (C) size_t writeFile(FILE* file, const void* buffer, size_t size) => fwrite(
     buffer, 1, size, file
 );
 
