@@ -13,39 +13,88 @@ extern (C) int fseek(void* stream, long offset, int origin);
 extern (C) long ftell(void* stream);
 extern (C) int vprintf(const char* fmt, void* arg);
 extern (C) int fprintf(void* stream, const char* fmt, ...);
+
+/** 
+ * Flushes all streams.
+ */
 extern (C) void flushAll()
 {
     auto _ = fflush(null);
 }
 
+/** 
+ * Prints a string to stdout with no terminating newline.
+ *
+ * Params:
+ *   str = The string to print.
+ */
 extern (C) void print(const char* str)
 {
     printf("%s", str);
     auto _ = fflush(stdout);
 }
 
+/** 
+ * Prints a string to stdout with a terminating newline.
+ *
+ * Params:
+ *   str = The string to print.
+ */
 extern (C) void println(const char* str)
 {
     printf("%s\n", str);
     auto _ = fflush(stdout);
 }
 
+/** 
+ * Tries to read an integer from stdin.
+ *
+ * Params:
+ *   val = The integer to read.
+ *
+ * Returns:
+ *   true if the read was successful, false otherwise.
+ */
 extern (C) bool tryReadInt(ref int val) => scanf("%d", &val) == 1;
 extern (C) bool tryReadFloat(ref float val) => scanf("%f", &val) == 1;
 extern (C) bool tryReadString(char* buffer) => scanf("%s", buffer) == 1;
 
+/** 
+ * Reads an integer from stdin with a default value.
+ *
+ * Params:
+ *   defaultValue = The default value to return if the read fails.
+ *
+ * Returns:
+ *   The read integer or the default value if the read fails.
+ */
 extern (C) int readIntWithDefault(int defaultValue)
 {
     int val;
     return tryReadInt(val) ? val : defaultValue;
 }
 
+/** 
+ * Reads a float from stdin with a default value.
+ *
+ * Params:
+ *   defaultValue = The default value to return if the read fails.
+ *
+ * Returns:
+ *   The read float or the default value if the read fails.
+ */
 extern (C) float readFloatWithDefault(float defaultValue)
 {
     float val;
     return tryReadFloat(val) ? val : defaultValue;
 }
 
+/** 
+ * Reads an integer from stdin.
+ *
+ * Returns:
+ *   The read integer.
+ */
 extern (C) int readInt()
 {
     int val;
@@ -54,6 +103,12 @@ extern (C) int readInt()
     return val;
 }
 
+/** 
+ * Reads a float from stdin.
+ *
+ * Returns:
+ *   The read float.
+ */
 extern (C) float readFloat()
 {
     float val;
@@ -64,6 +119,12 @@ extern (C) float readFloat()
     return val;
 }
 
+/** 
+ * Reads a string from stdin.
+ *
+ * Returns:
+ *   The read string.
+ */
 extern (C) void readString(char* buffer)
 {
     if (!tryReadString(buffer))
@@ -73,6 +134,13 @@ extern (C) void readString(char* buffer)
     auto _ = fflush(stdin);
 }
 
+/** 
+ * Prints a formatted string to stdout.
+ *
+ * Params:
+ *   fmt = The format string.
+ *   ... = The arguments to the format string.
+ */
 extern (C) void printfmt(const char* fmt, ...)
 {
     import core.vararg;
@@ -85,20 +153,49 @@ extern (C) void printfmt(const char* fmt, ...)
     _ = fflush(stdout);
 }
 
+/** 
+ * Prints an integer to stdout.
+ *
+ * Params:
+ *   val = The integer to print.
+ */
 extern (C) void printInt(int val)
 {
     printf("%d", val);
     auto _ = fflush(stdout);
 }
 
+/** 
+ * Prints a float to stdout.
+ *
+ * Params:
+ *   val = The float to print.
+ */
 extern (C) void printFloat(float val)
 {
     printf("%f", val);
     auto _ = fflush(stdout);
 }
 
+/** 
+ * Tries to read a line from stdin.
+ *
+ * Params:
+ *   buffer = The buffer to store the read line.
+ *   maxLen = The maximum length of the line to read.
+ *
+ * Returns:
+ *   true if the read was successful, false otherwise.
+ */
 extern (C) bool tryReadLine(char* buffer, int maxLen) => scanf("%[^\n]", buffer) == 1;
 
+/** 
+ * Reads a line from stdin.
+ *
+ * Params:
+ *   buffer = The buffer to store the read line.
+ *   maxLen = The maximum length of the line to read.
+ */
 extern (C) void readLine(char* buffer, int maxLen)
 {
     if (!tryReadLine(buffer, maxLen))
@@ -106,6 +203,15 @@ extern (C) void readLine(char* buffer, int maxLen)
     auto _ = fflush(stdin);
 }
 
+/** 
+ * Checks if a file exists.
+ *
+ * Params:
+ *   filename = The name of the file to check.
+ *
+ * Returns:
+ *   true if the file exists, false otherwise.
+ */
 extern (C) bool fileExists(const char* filename)
 {
     auto file = fopen(filename, "r");
@@ -117,6 +223,15 @@ extern (C) bool fileExists(const char* filename)
     return false;
 }
 
+/** 
+ * Gets the size of a file.
+ *
+ * Params:
+ *   file = The file to get the size of.
+ *
+ * Returns:
+ *   The size of the file.
+ */
 extern (C) long fileSize(void* file)
 {
     auto pos = ftell(file);
@@ -126,7 +241,30 @@ extern (C) long fileSize(void* file)
     return size;
 }
 
+/** 
+ * Reads a file.
+ *
+ * Params:
+ *   file = The file to read.
+ *   buffer = The buffer to store the read file.
+ *   size = The size of the file to read.
+ *
+ * Returns:
+ *   The number of bytes read.
+ */
 extern (C) size_t readFile(void* file, void* buffer, size_t size) => fread(buffer, 1, size, file);
+
+/** 
+ * Writes a file.
+ *
+ * Params:
+ *   file = The file to write.
+ *   buffer = The buffer to write the file from.
+ *   size = The size of the file to write.
+ *
+ * Returns:
+ *   The number of bytes written.
+ */
 extern (C) size_t writeFile(void* file, const void* buffer, size_t size) => fwrite(
     buffer, 1, size, file
 );
