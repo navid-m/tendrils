@@ -5,6 +5,7 @@ extern (C) int scanf(const char*, ...);
 extern (C) int fflush(void*);
 extern (C) __gshared void* stdout;
 extern (C) __gshared void* stdin;
+extern (C) __gshared void* stderr;
 extern (C) __gshared void* fopen(const char* filename, const char* mode);
 extern (C) int fclose(void* stream);
 extern (C) size_t fread(void* ptr, size_t size, size_t count, void* stream);
@@ -13,6 +14,12 @@ extern (C) int fseek(void* stream, long offset, int origin);
 extern (C) long ftell(void* stream);
 extern (C) int vprintf(const char* fmt, void* arg);
 extern (C) int fprintf(void* stream, const char* fmt, ...);
+extern (C) int fgetc(void* stream);
+extern (C) int fputc(int c, void* stream);
+extern (C) char* fgets(char* str, int n, void* stream);
+extern (C) int fputs(const char* str, void* stream);
+extern (C) int getchar();
+extern (C) int putchar(int c);
 
 /** 
  * Flushes all streams.
@@ -44,6 +51,18 @@ extern (C) void println(const char* str)
 {
     printf("%s\n", str);
     auto _ = fflush(stdout);
+}
+
+/** 
+ * Prints a string to stderr with a terminating newline.
+ *
+ * Params:
+ *   str = The string to print.
+ */
+extern (C) void eprintln(const char* str)
+{
+    auto _ = fprintf(stderr, "%s\n", str);
+    _ = fflush(stderr);
 }
 
 /** 
@@ -187,7 +206,18 @@ extern (C) void printFloat(float val)
  * Returns:
  *   true if the read was successful, false otherwise.
  */
-extern (C) bool tryReadLine(char* buffer, int maxLen) => scanf("%[^\n]", buffer) == 1;
+extern (C) bool tryReadLine(char* buffer, int maxLen)
+{
+    if (fgets(buffer, maxLen, stdin) !is null)
+    {
+        int len = 0;
+        while (buffer[len] != '\0') len++;
+        if (len > 0 && buffer[len - 1] == '\n')
+            buffer[len - 1] = '\0';
+        return true;
+    }
+    return false;
+}
 
 /** 
  * Reads a line from stdin.
@@ -200,7 +230,26 @@ extern (C) void readLine(char* buffer, int maxLen)
 {
     if (!tryReadLine(buffer, maxLen))
         assert(0, "Failed to read line");
-    auto _ = fflush(stdin);
+}
+
+/** 
+ * Reads a single character from stdin.
+ *
+ * Returns:
+ *   The character read, or -1 on error/EOF.
+ */
+extern (C) int readChar() => getchar();
+
+/** 
+ * Writes a single character to stdout.
+ *
+ * Params:
+ *   c = The character to write.
+ */
+extern (C) void writeChar(int c)
+{
+    auto _ = putchar(c);
+    _ = fflush(stdout);
 }
 
 /** 
