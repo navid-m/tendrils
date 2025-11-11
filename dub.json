@@ -3,7 +3,7 @@
 		"Navid"
 	],
 	"copyright": "Copyright © 2025, Navid",
-	"description": "Minimal stdio for producing lightweight binaries (by not importing std.stdio)",
+	"description": "Minimal stdio for producing lightweight binaries (replacement for base functionality of std.stdio)",
 	"license": "proprietary",
 	"name": "tendrils"
 }
