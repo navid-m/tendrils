@@ -4,6 +4,6 @@
 	],
 	"copyright": "Copyright © 2025, Navid",
 	"description": "Minimal stdio for producing lightweight binaries (replacement for base functionality of std.stdio)",
-	"license": "proprietary",
+	"license": "GPL-3.0",
 	"name": "tendrils"
 }
