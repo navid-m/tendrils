@@ -114,7 +114,7 @@ unittest
 	int i = 42;
 	float f = 3.14f;
 	double d = 2.718281828;
-	long l = 1234567890123L;
+	long l = 123_456_789_012_3L;
 
 	printfmt("int: %d, float: %f, double: %lf, long: %ld\n", i, f, d, l);
 }
