@@ -20,6 +20,9 @@ extern (C) char* fgets(char* str, int n, void* stream);
 extern (C) int fputs(const char* str, void* stream);
 extern (C) int getchar();
 extern (C) int putchar(int c);
+extern (C) int ferror(void* stream);
+extern (C) int feof(void* stream);
+extern (C) void clearerr(void* stream);
 
 /** 
  * Flushes all streams.
@@ -54,6 +57,18 @@ extern (C) void println(const char* str)
 }
 
 /** 
+ * Prints a string to stderr with no terminating newline.
+ *
+ * Params:
+ *   str = The string to print.
+ */
+extern (C) void eprint(const char* str)
+{
+    auto _ = fprintf(stderr, "%s", str);
+    _ = fflush(stderr);
+}
+
+/** 
  * Prints a string to stderr with a terminating newline.
  *
  * Params:
@@ -62,6 +77,18 @@ extern (C) void println(const char* str)
 extern (C) void eprintln(const char* str)
 {
     auto _ = fprintf(stderr, "%s\n", str);
+    _ = fflush(stderr);
+}
+
+/** 
+ * Prints an integer to stderr with a terminating newline.
+ *
+ * Params:
+ *   val = The integer to print.
+ */
+extern (C) void eprintInt(int val)
+{
+    auto _ = fprintf(stderr, "%d\n", val);
     _ = fflush(stderr);
 }
 
@@ -76,6 +103,8 @@ extern (C) void eprintln(const char* str)
  */
 extern (C) bool tryReadInt(ref int val) => scanf("%d", &val) == 1;
 extern (C) bool tryReadFloat(ref float val) => scanf("%f", &val) == 1;
+extern (C) bool tryReadDouble(ref double val) => scanf("%lf", &val) == 1;
+extern (C) bool tryReadLong(ref long val) => scanf("%ld", &val) == 1;
 extern (C) bool tryReadString(char* buffer) => scanf("%s", buffer) == 1;
 
 /** 
@@ -139,6 +168,38 @@ extern (C) float readFloat()
 }
 
 /** 
+ * Reads a double from stdin.
+ *
+ * Returns:
+ *   The read double.
+ */
+extern (C) double readDouble()
+{
+    double val;
+    if (!tryReadDouble(val))
+    {
+        assert(0, "Failed to read double");
+    }
+    return val;
+}
+
+/** 
+ * Reads a long from stdin.
+ *
+ * Returns:
+ *   The read long.
+ */
+extern (C) long readLong()
+{
+    long val;
+    if (!tryReadLong(val))
+    {
+        assert(0, "Failed to read long");
+    }
+    return val;
+}
+
+/** 
  * Reads a string from stdin.
  *
  * Returns:
@@ -185,6 +246,18 @@ extern (C) void printInt(int val)
 }
 
 /** 
+ * Prints an integer to stdout with a newline.
+ *
+ * Params:
+ *   val = The integer to print.
+ */
+extern (C) void printlnInt(int val)
+{
+    printf("%d\n", val);
+    auto _ = fflush(stdout);
+}
+
+/** 
  * Prints a float to stdout.
  *
  * Params:
@@ -193,6 +266,42 @@ extern (C) void printInt(int val)
 extern (C) void printFloat(float val)
 {
     printf("%f", val);
+    auto _ = fflush(stdout);
+}
+
+/** 
+ * Prints a float to stdout with a newline.
+ *
+ * Params:
+ *   val = The float to print.
+ */
+extern (C) void printlnFloat(float val)
+{
+    printf("%f\n", val);
+    auto _ = fflush(stdout);
+}
+
+/** 
+ * Prints a double to stdout.
+ *
+ * Params:
+ *   val = The double to print.
+ */
+extern (C) void printDouble(double val)
+{
+    printf("%lf", val);
+    auto _ = fflush(stdout);
+}
+
+/** 
+ * Prints a long to stdout.
+ *
+ * Params:
+ *   val = The long to print.
+ */
+extern (C) void printLong(long val)
+{
+    printf("%ld", val);
     auto _ = fflush(stdout);
 }
 
@@ -251,6 +360,39 @@ extern (C) void writeChar(int c)
 {
     auto _ = putchar(c);
     _ = fflush(stdout);
+}
+
+/** 
+ * Checks if end-of-file has been reached for a stream.
+ *
+ * Params:
+ *   file = The file stream to check.
+ *
+ * Returns:
+ *   true if EOF has been reached, false otherwise.
+ */
+extern (C) bool isEof(void* file) => feof(file) != 0;
+
+/** 
+ * Checks if an error has occurred on a stream.
+ *
+ * Params:
+ *   file = The file stream to check.
+ *
+ * Returns:
+ *   true if an error has occurred, false otherwise.
+ */
+extern (C) bool hasError(void* file) => ferror(file) != 0;
+
+/** 
+ * Clears the error and EOF indicators for a stream.
+ *
+ * Params:
+ *   file = The file stream to clear.
+ */
+extern (C) void clearError(void* file)
+{
+    clearerr(file);
 }
 
 /** 
